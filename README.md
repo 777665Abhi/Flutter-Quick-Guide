@@ -3190,11 +3190,7 @@ client.subscribe('test/topic', MqttQos.atMostOnce);
 | Real-time Cloud     | Firebase            | Social apps, instant updates      |
 | IoT Real-time       | MQTT                | Sensors, smart devices            |
 
----
 
-
-
-🟤 7. Database & Storage
 ---
 
 ## **7. Database & Storage in Flutter**
@@ -3359,23 +3355,182 @@ final url = await storageRef.getDownloadURL();
 | Large file storage               | **Firebase Cloud Storage**                |
 | Authentication                   | **Firebase Auth**                         |
 
+
 ---
 
+## **8. Testing in Flutter**
 
+### **Why Testing is Important**
 
+Testing ensures your app works as expected, prevents bugs from sneaking back after changes (regressions), and improves maintainability by allowing confident refactoring.
+Flutter supports **three main types of tests**: **Unit Tests**, **Widget Tests**, and **Integration Tests**.
 
-⚫ 8. Testing
-➤ Types:
-Unit Tests: Test business logic.
+---
 
+## **1️⃣ Unit Tests**
 
-Widget Tests: Render and test widgets in isolation.
+**Purpose:**
 
+* Validate **business logic** or individual functions/methods in isolation.
+* No Flutter UI rendering is involved.
 
-Integration Tests: Simulate user actions across the app.
+**Example Uses:**
 
+* Testing calculation functions.
+* Verifying state management logic.
+* Ensuring data parsing works correctly.
 
-Use flutter_test, mockito, and integration_test package.
+**Example Code:**
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+
+int add(int a, int b) => a + b;
+
+void main() {
+  test('Addition function test', () {
+    expect(add(2, 3), 5);
+  });
+}
+```
+
+**Tools & Packages:**
+
+* **`flutter_test`** – Built-in Flutter testing framework.
+* **`mockito`** – Mock dependencies (e.g., APIs, DB).
+* **`mocktail`** – Null-safety friendly mocking alternative.
+
+---
+
+## **2️⃣ Widget Tests**
+
+**Purpose:**
+
+* Test a **single widget in isolation**.
+* Checks that UI renders correctly and reacts properly to user interaction.
+
+**Example Uses:**
+
+* Ensuring a `Text` widget displays correct text.
+* Verifying a button triggers the right callback.
+
+**Example Code:**
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  testWidgets('Button tap changes text', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: StatefulBuilder(
+        builder: (context, setState) {
+          String text = "Before";
+          return Scaffold(
+            body: Column(
+              children: [
+                Text(text),
+                ElevatedButton(
+                  onPressed: () => setState(() => text = "After"),
+                  child: Text("Change"),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    ));
+
+    // Verify initial text
+    expect(find.text("Before"), findsOneWidget);
+
+    // Tap the button
+    await tester.tap(find.text("Change"));
+    await tester.pump();
+
+    // Verify updated text
+    expect(find.text("After"), findsOneWidget);
+  });
+}
+```
+
+**Tools & Packages:**
+
+* **`flutter_test`** – For widget rendering.
+* **`golden_toolkit`** – For **golden tests** (UI snapshot comparison).
+
+---
+
+## **3️⃣ Integration Tests**
+
+**Purpose:**
+
+* Simulate **real-world app usage** from start to finish.
+* Runs on a **real device/emulator**.
+* Validates navigation, API calls, and multiple widget interactions.
+
+**Example Uses:**
+
+* Logging in with valid credentials and verifying dashboard loads.
+* Adding an item to a cart and checking checkout.
+
+**Example Code:**
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:my_app/main.dart' as app;
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('Full app test', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Find and tap the login button
+    await tester.tap(find.text('Login'));
+    await tester.pumpAndSettle();
+
+    // Verify dashboard appears
+    expect(find.text('Dashboard'), findsOneWidget);
+  });
+}
+```
+
+**Tools & Packages:**
+
+* **`integration_test`** – Official package for integration testing.
+* **`flutter_driver`** (deprecated) – Older approach.
+* Can integrate with **Firebase Test Lab** or **Codemagic** for CI/CD.
+
+---
+
+## **Best Practices for Flutter Testing**
+
+1. **Follow the Pyramid:**
+
+   * More Unit Tests → Some Widget Tests → Few Integration Tests
+     (Unit tests are fastest, integration tests are slowest).
+
+2. **Use Mocks/Stubs:**
+
+   * Avoid hitting real APIs or databases in unit/widget tests.
+
+3. **Automate Tests:**
+
+   * Add tests in **CI/CD pipelines** so they run automatically on push.
+
+4. **Use Golden Tests for UI:**
+
+   * Snapshot-based tests to detect unwanted UI changes.
+
+5. **Keep Tests Independent:**
+
+   * Don’t rely on the order of test execution.
+
+---
+
 
 ⚪ 9. Advanced Topics
 ➤ Performance Optimization
