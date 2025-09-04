@@ -1,4 +1,3 @@
-
 # 🟢 1. Flutter Basics
 # ➤ Flutter Architecture
 Flutter uses a declarative UI approach. The UI is built as a tree of widgets. At runtime, Flutter renders this tree efficiently using its own rendering engine (Skia).
@@ -6,6 +5,10 @@ Flutter uses a declarative UI approach. The UI is built as a tree of widgets. At
 # ➤ Dart Language Essentials
 Dart is an object-oriented, strongly typed language developed by Google — used exclusively in Flutter for both frontend and backend logic.
 
+When we say Dart is a strongly typed language, it means:
+*Every variable has a specific type* (like int, String, double, bool, List<T>, Map<K, V>, or a custom class).
+Once a variable is declared with a type, you *cannot assign a value of another incompatible type to it*.
+The Dart analyzer (at compile-time) and the runtime (while executing) both enforce type rules to prevent invalid assignments or operations.
 ---
 
 ### 🔹 1. **Variables and Data Types**
@@ -247,7 +250,6 @@ print('flutter'.capitalize()); // Flutter
 
 
 # ➤ Stateless vs Stateful Widgets
-Here’s a clear comparison of **StatelessWidget** and **StatefulWidget** in Flutter, along with examples:
 
 ---
 
@@ -462,7 +464,6 @@ class _MyStatefulState extends State<MyStateful> {
 
 
 # 🟡 2. UI & Layout
-Here’s a detailed breakdown of **Flutter Layout Widgets** — including `Row`, `Column`, `Expanded`, `Flexible`, and `Stack` — with examples and use cases for each:
 
 ---
 
@@ -627,7 +628,6 @@ Stack(
 
 
 ## ➤ Responsive UI
-Great! Let's break down **Responsive UI in Flutter**, especially using `MediaQuery`, `LayoutBuilder`, and popular packages like `flutter_screenutil`.
 
 ---
 
@@ -747,13 +747,6 @@ Container(
 | Responsive grids/lists  | `GridView`, `Wrap`, `Flex`               |
 
 ---
-
-Would you like code examples for:
-
-* A **responsive dashboard layout**?
-* A **mobile + tablet UI layout builder**?
-* **Using `ScreenUtil` with themes and dark mode**?
-
 
 
 ## ➤ Animations
