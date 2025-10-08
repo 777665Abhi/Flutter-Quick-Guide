@@ -4,9 +4,11 @@ Flutter uses a declarative UI approach. The UI is built as a tree of widgets. At
 
 # ➤ Dart Language Essentials
 Dart is an object-oriented, strongly typed language developed by Google — used exclusively in Flutter for both frontend and backend logic.
+
 When we say Dart is a strongly typed language, it means:
 Every variable has a specific type (like int, String, double, bool, List<T>, Map<K, V>, or a custom class).
-Once a variable is declared with a type, you *cannot assign a value of another incompatible type to it.
+Once a variable is declared with a type, you **cannot assign a value of another incompatible type to it**.
+
 The Dart analyzer (at compile-time) and the runtime (while executing) both enforce type rules to prevent invalid assignments or operations.
 
 
