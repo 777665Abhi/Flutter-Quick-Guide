@@ -202,23 +202,40 @@ With `sealed` classes + exhaustive `switch`, compiler can ensure all states are 
 
 ### 🔹 1. **Variables and Data Types**
 
-```dart
-var name = 'Abhishek';    // Type inferred as String
-String city = 'Delhi';     // Explicit type
+#### Explanation:
 
-final age = 25;            // Set once, not reassignable
-const PI = 3.14;           // Compile-time constant
-late String country;       // Will assign later, non-null
+Variables store values in memory, and Dart keeps track of the type of each value.
+
+* `var` means Dart infers the type from the assigned value.
+* Explicit types like `String city` make the code easier to read.
+* `final` means the variable can be assigned only once.
+* `const` means the value must be known at compile time.
+* `late` means the variable will be initialized later, but before use.
+
+Example:
+
+```dart
+var score = 100;        // inferred as int
+final country = 'India';
+const gravity = 9.8;
+late String message;
+message = 'Welcome';
 ```
 
-#### Common Types:
+#### Common Questions:
 
-* `String`, `int`, `double`, `bool`
-* `List`, `Set`, `Map`
-* `dynamic` (can hold any type)
-* `Object?` (safe nullable object)
+1. What is the difference between `var` and `dynamic`?
+  `var` gets a fixed inferred type, while `dynamic` can change type and skips most compile-time checking.
 
----
+2. What is the difference between `final` and `const`?
+  `final` is assigned once at runtime, while `const` must be a compile-time constant.
+
+3. Can a `final List` be modified?
+  Yes. The reference cannot change, but the contents can still change unless the list is immutable.
+
+4. When should you prefer explicit types over `var`?
+  Prefer explicit types in APIs, model classes, and complex generic code where readability matters.
+
 
 ### 🔹 2. **Null Safety**
 
@@ -239,6 +256,37 @@ Operators:
 ```dart
 print(nickname?.length ?? 0);
 ```
+
+#### Explanation:
+
+Null safety helps prevent null reference errors by making nullability explicit in the type system.
+
+* `String name` means `name` can never be `null`.
+* `String? nickname` means `nickname` is allowed to be `null`.
+* `?.` accesses a property only if the object is not null.
+* `??` provides a fallback value when the left side is null.
+* `!` tells Dart to treat a nullable value as non-null, but it can crash if the value is actually null.
+
+Example:
+
+```dart
+String? email;
+print(email?.toUpperCase() ?? 'No email');
+```
+
+#### Common Questions:
+
+1. What is the difference between `String` and `String?`?
+  `String` cannot hold null, while `String?` can.
+
+2. What does the `!` operator do?
+  It forcefully converts a nullable value to non-null, and throws an error at runtime if the value is null.
+
+3. Why is `??` useful?
+  It lets you provide a default value when the original value is null.
+
+4. What problem does null safety solve?
+  It catches many null-related bugs at compile time instead of waiting for runtime crashes.
 
 ---
 
