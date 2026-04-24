@@ -11,6 +11,191 @@ Once a variable is declared with a type, you **cannot assign a value of another 
 
 The Dart analyzer (at compile-time) and the runtime (while executing) both enforce type rules to prevent invalid assignments or operations.
 
+### Why Dart Is Strongly Typed Even With `var` and `dynamic`
+
+Dart is strongly typed, but it also supports type inference.
+
+`var` does not mean “no type.”  
+It means: “compiler, figure out the type from the first value.”
+
+Example:
+```dart
+var name = 'Abhi'; // inferred as String
+name = 'Rahul';    // OK
+name = 10;         // Error (int can't go into String)
+```
+
+So `var` is still strongly typed after inference.
+
+`dynamic` is different:
+```dart
+dynamic x = 'hello';
+x = 10;            // OK
+x = true;          // OK
+```
+With `dynamic`, type checks are relaxed until runtime. You lose compile-time safety.
+
+So the rule is:
+
+1. Strong typing = every value has a type.
+2. `var` = inferred static type (safe).
+3. `dynamic` = opt-out of static checking (less safe, use rarely).
+
+
+### 1) Type inference vs explicit typing
+`var` uses static type inference. The compiler infers once and keeps that type.
+
+```dart
+var total = 10; // inferred as int
+// total = 10.5; // Error
+```
+
+Use explicit types in public APIs for readability and safety:
+
+```dart
+List<String> names = ['A', 'B'];
+```
+
+### 2) `Object`, `Object?`, and `dynamic`
+* `Object`: non-null supertype of all non-null values.
+* `Object?`: nullable top type.
+* `dynamic`: turns off most static checks for that value.
+
+```dart
+Object a = 'hello';
+Object? b = null;
+dynamic c = 42;
+c = 'now string'; // allowed
+```
+
+### 3) `int`, `double`, `num` and conversions
+`num` can hold both `int` and `double`, but no silent unsafe conversion.
+
+```dart
+num x = 10;
+x = 10.5;
+
+int i = 5;
+double d = i.toDouble(); // explicit conversion
+```
+
+### 4) Sound null safety
+Null safety separates nullable and non-nullable types.
+
+```dart
+String name = 'A';
+String? nick;
+
+print(nick?.length ?? 0); // safe access
+```
+
+### 5) Runtime checks and casts (`is`, `as`)
+Use `is` before cast when possible.
+
+```dart
+Object value = 'dart';
+if (value is String) {
+  print(value.length); // promoted to String
+}
+
+final s = value as String; // throws at runtime if wrong type
+```
+
+### 6) Generics and variance
+Dart generics are invariant in most cases.
+
+```dart
+List<String> strings = ['a'];
+// List<Object> objs = strings; // Error (invariant)
+
+List<Object> objs = ['a', 1, true];
+```
+
+This prevents unsafe writes into typed collections.
+
+### 7) Type promotion and flow analysis
+Dart promotes types after checks.
+
+```dart
+Object data = 'hello';
+if (data is String) {
+  print(data.toUpperCase()); // promoted to String
+}
+```
+
+Promotion may fail if variable can change in between (for example, captured mutable state).
+
+### 8) `final` vs `const` vs immutability
+* `final`: set once at runtime.
+* `const`: compile-time constant.
+* `const` objects are canonicalized when identical.
+
+```dart
+final now = DateTime.now();
+const pi = 3.14159;
+```
+
+Note: `final List` means reference is fixed, but list contents can still change unless made unmodifiable.
+
+### 9) `late` keyword and pitfalls
+`late` delays initialization for non-null fields/variables.
+
+```dart
+late String token;
+token = 'abc';
+print(token);
+```
+
+Reading `late` before assignment throws `LateInitializationError`.
+
+### 10) Dynamic dispatch and `noSuchMethod`
+With `dynamic`, member lookup happens at runtime.
+
+```dart
+dynamic item = 'text';
+print(item.length); // runtime resolution
+```
+
+If method/property does not exist, it fails at runtime (or can be trapped with `noSuchMethod` in custom classes).
+
+### 11) Extension methods and static types
+Extensions are resolved statically by compile-time type.
+
+```dart
+extension StringX on String {
+  String shout() => toUpperCase();
+}
+
+String s = 'hi';
+print(s.shout());
+
+dynamic d2 = 'hi';
+// d2.shout(); // Not statically guaranteed
+```
+
+If you rely on `dynamic`, you lose extension method safety and tooling help.
+
+### 12) Records, patterns, and sealed classes
+Modern Dart improves type-safety with expressive modeling.
+
+```dart
+// Record
+({String name, int age}) user = (name: 'Abhi', age: 25);
+
+// Pattern matching
+switch (user) {
+  case (name: var n, age: >= 18):
+    print('$n is adult');
+}
+```
+
+With `sealed` classes + exhaustive `switch`, compiler can ensure all states are handled.
+
+### Quick interview summary
+* `var` is inferred static type, not dynamic type.
+* Prefer explicit types for APIs and complex generics.
+* Use `dynamic` only at boundaries (interop, loosely typed JSON wrappers).
+* Use null safety + promotion + patterns to push bugs to compile time.
 
 
 ---
